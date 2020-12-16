@@ -1,0 +1,16 @@
+p {
+	line-height : 20px;
+}
+
+.content {
+	display : 'none';
+	dippaly : 'block';
+	display : 'inline';
+}
+
+.content1{
+	position : static;
+	position : fixed; /* 相对位置，不随窗口滚动而滚动  */
+	position : relative;
+	
+}

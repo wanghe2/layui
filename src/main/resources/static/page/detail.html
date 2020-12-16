@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <script src="js/vue.js"></script>
+    <title>申请跟进</title>
+</head>
+
+<body>
+    <div id="vueApp" class="container">
+        <!-- 需求填写 -->
+        <div class="content">
+            <div class="form_content">
+                <div class="form_item">
+                    <div class="detail_item">
+                        <h3>跟进结果：</h3>
+                        <p>{{dataDetail.followStatus==0?'未处理':dataDetail.followStatus==1?'挽退成功':dataDetail.followStatus==2?'确认退班':'48小时未操作'}}
+                        </p>
+                    </div>
+                    <div class="detail_item">
+                        <h3>跟进说明：</h3>
+                        <p>{{dataDetail.message}}</p>
+                    </div>
+                    <div class="detail_item" style="display: block;" v-if="imagelist.length>0">
+                        <h3>图片：</h3>
+                        <div class="imgContent" v-for="(item,index) in imagelist" :key="index">
+                            <img class="imgStyle" @click="previewImg(item)" :src="item" alt="">
+                        </div>
+                    </div>
+                    
+
+
+
+                </div>
+            </div>
+        </div>
+        <!-- 需求填写 end-->
+
+        <!-- 加载 -->
+        <div class="loading" v-show="isLoading">
+            <div>
+                <img src="images/loading.png" alt="">
+                <p>加载中...</p>
+            </div>
+
+        </div>
+        <!-- 加载 -->
+
+        <div class="shadow" v-if="imageUrl" @click="previewImg('')">
+            <img :src="imageUrl" alt="">
+        </div>
+
+    </div>
+</body>
+<script src="js/axios.min.js"></script>
+<script>
+    var instance = axios.create({
+        baseURL: ' http://10.167.3.125:8080/human/wechat/binding/',
+        // baseURL: 'http://sw.hf.xdf.cn/free/',
+        timeout: 6000,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Accept: '*/*'
+        },
+    });
+    window.onload = function () {
+        var vm = new Vue({
+            el: '#vueApp',
+            data: {
+                dataDetail: {},
+                isLoading: false,
+                imageUrl:'',
+                imagelist:[]
+            },
+            watch: {
+
+            },
+            created: function () {
+            },
+            mounted() {
+                this.getDetail();
+                this.$nextTick(() => {
+
+                })
+            },
+            methods: {
+                previewImg(url){
+                    this.imageUrl = url
+                },
+                getDetail() {
+                    this.isLoading = true;
+                    const formData = new FormData();
+                    let id = window.location.search.split('=')[1]
+                    let param = `id=${id}`
+                    instance.get('offclass/followDetail.html?' + param).then(function (response) {
+                        vm.isLoading = false;
+                        if (!response.data.status) {
+                            alert(response.data.message);
+                        } else {
+                            let resData = JSON.parse(response.data.data)
+                            vm.dataDetail = resData;
+                            vm.imagelist = resData.imgUrl?resData.imgUrl.split(','):[]
+                            
+                        }
+                    })
+                        .catch(function (error) {
+                            vm.isLoading = false;
+                            alert(error)
+                        });
+
+
+                },
+            }
+        });
+    }
+</script>
+
+</html>

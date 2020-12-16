@@ -1,0 +1,425 @@
+html{
+    font-size: 10px;
+    color: #0a083a;
+    background: url(../images/bg.png) #f7f7f7  top no-repeat;
+    background-size: 100%;
+}
+/* body{
+    
+} */
+*{
+    padding: 0;
+    margin: 0;
+}
+.tabbar{
+    width: 100%;
+    display: flex;
+    font-size: 2.666vw;
+    font-weight: 450;
+    padding: 1.8666vw 0;
+    position: fixed;
+    bottom: 0;
+    background-color: #fff;
+}
+.tabbar .tabbar_item{
+    flex: 1;
+    text-align: center;
+}
+.tabbar_item_active{
+    color:#15d0ad
+}
+.a{
+    display: none;
+}
+.tabbar_item_active .a{
+    display: inline-block;
+}
+.tabbar_item_active .n{
+    display: none;
+}
+
+.tabbar img{
+    width: 9.333vw;
+    height: 9.333vw;
+}
+.container{
+    padding: 0 4vw;
+    box-sizing: border-box;
+    width: 100%;
+    padding-bottom: 18.6666vw;
+}
+.tabContent{
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #12cdae;
+    padding-bottom: 3vw;
+}
+.mine .tab{
+    box-sizing: border-box;
+    border: 2px solid #fff;
+    border-radius: 21.33vw;
+    width: 90vw;
+    height: 9.33vw;
+    display: flex;
+    text-align: center;
+    font-size: 4vw;
+    font-weight: bold;
+    margin: 3.333vw auto 0;
+    overflow: hidden;
+}
+/* .mine .tab{
+    box-sizing: border-box;
+    border: 2px solid #fff;
+    border-radius: 21.33vw;
+    width: 82.9vw;
+    height: 9.33vw;
+    display: flex;
+    text-align: center;
+    font-size: 4vw;
+    font-weight: bold;
+    margin: 3.333vw auto 0;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    margin-left: -41.45vw;
+} */
+.tab .tab_item{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    flex:1;
+    position: relative;
+}
+
+.tab .tab_item_active{
+    background-color: #fff;
+    color:#15d0ad;
+    border-radius: 3.8vw;
+}
+.list_content{
+    /* margin-top: 4vw; */
+    margin-top: 17vw;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 4vw;
+    background: linear-gradient(#59dbc5 0%, #59dbc5 9vw,transparent 9vw);
+    border-radius: 4.8vw;
+}
+.list_item{
+    width: 100%;
+    background-color: #fff;
+    border-radius: 4.8vw;
+    box-sizing: border-box;
+    padding: 5.333vw 6.6666vw 4vw 8vw ;
+    overflow: hidden;
+    box-shadow: 0 0 3px #f2f7f6;
+    margin-bottom: 6.666vw;
+}
+.list_item h3{
+    font-weight: bold;
+    font-size: 4.266vw;
+    margin-bottom: 8px;
+}
+.list_item p{
+    font-size: 3.466vw;
+    margin-bottom: 4px;
+}
+.list_item .btn{
+    width: 21.6vw;
+    height: 8.266vw;
+    border-radius: 80px;
+    color: #fff;
+    font-weight: 500;
+    font-size: 3.4666vw;
+    background-color: #59dbc5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    float: right;
+    box-shadow: 0px 2px 3px #d7efeb;
+}
+.form_content{
+    margin-top: 3.333vw;
+    width: 100%;
+    box-sizing: border-box;
+    padding-top: 4vw;
+    background: linear-gradient(#59dbc5 0%, #59dbc5 9vw,transparent 9vw);
+    border-radius: 4.8vw;
+}
+.form_item{
+    width: 100%;
+    background-color: #fff;
+    border-radius: 4.8vw;
+    box-sizing: border-box;
+    padding: 6.666vw 4.666vw;
+    overflow: hidden;
+    box-shadow: 0 0 3px #f2f7f6;
+    margin-bottom: 6.666vw;
+    min-height: 55vw;
+}
+.form_item h3{
+    font-weight: 500;
+    font-size: 4vw;
+    /* padding-left: 5.3333vw; */
+    margin-bottom: 10px;
+}
+.form_item input,select{
+    width: 100%;
+    height: 13vw;
+    display: flex;
+    justify-content: center;
+    font-size: 3.7333vw;
+    box-sizing: border-box;
+    background-color: #f5fffd;
+    border-radius: 80px;
+    border: none;
+    padding: 0 5.333vw;
+    margin: 1.8666vw 0 5.0666vw;
+    outline: none;
+}
+.form_item select{
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background: url(../images/right-select.png) no-repeat #f5fffd;
+    background-size: 3.2vw 2.4vw;
+    background-position-x: 74.6666vw;
+    background-position-y: center;
+}
+.form_item select.sec1{
+    color: #c3cbcf;
+}
+.form_item input::-webkit-input-placeholder {
+     color: #c3cbcf;
+     font-size: 3.73333vw;
+  }
+.form_item:nth-child(2){
+    padding: 6.666vw 6.666vw 6.666vw 8.8vw;
+}
+.form_item h3.h3NoPadding{
+    padding-left: 0;
+}
+.tips{
+    font-size: 3.2vw;
+    margin-top: 2.666vw;
+    margin-bottom: 6.6666vw;
+}
+textarea{
+    width: 100%;
+    height: 29.7333vw;
+    display: flex;
+    justify-content: center;
+    font-size: 3.7333vw;
+    box-sizing: border-box;
+    background-color: #f5fffd;
+    border-radius: 4.8vw;
+    border: none;
+    padding: 5.333vw;
+    margin: 1.8666vw 0 5.0666vw;
+    outline: none;
+    resize:none;
+}
+.form_item textarea::-webkit-input-placeholder {
+    color: #c3cbcf;
+    font-size: 3.73333vw;
+ }
+ button{
+    width: 65.3333vw;
+    height: 13.0666vw;
+    text-align: center;
+    /* line-height: 13.0666vw; */
+    border-radius: 10.666vw;
+    background-color: #15d0ad;
+    color: #fff;
+    font-size: 4.2666vw;
+    font-weight: bolder;
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin:0 auto 8vw;
+    outline: none;
+    box-shadow: 0px 2px 6px #d7efeb;
+ }
+ .uploadFile{
+    width: 28vw;
+    height: 28vw;
+    border: dotted 2px #eee;
+    border-radius: 2.133vw;
+    margin: 1.5vw 0 0 3vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 9.2666vw;
+    color: #e3e3e3;
+ }
+ .imgContent{
+    width: 25vw;
+    height: 25vw;
+    /* margin: 1.5vw auto; */
+    margin-right: 5px;
+    float: left;
+    overflow: hidden;
+    border-radius: 1vw;
+    position: relative;
+ }
+ .imgContent:last-child{
+     margin: 0;
+ }
+ .deleteBtn{
+    position: absolute;
+    right: 0;
+    width: 5vw;
+    height: 5vw;
+    justify-content: center;
+    display: flex;
+    border-radius: 1vw;
+    align-items: center;
+    color: #fff;
+    background-color: rgba(0,0,0,0.5); 
+ }
+ .imgStyle{
+    width: 100%;
+ }
+ .btnContent{
+     display: flex
+ }
+ .btnContent button{
+    width: 40vw;
+    height: 11vw;
+ }
+ .noData{
+    width: 100%;
+    height: 73vw;
+    border-radius: 4.8vw;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #777;
+    font-size: 4vw;
+ }
+ .noMore{
+    text-align: center;
+    color: #333;
+    font-size: 3.3vw;
+}
+.loading,.shadow{
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+}
+.shadow img{
+    width: 100%;
+}
+.loading img{
+    animation: rotateAni 2s linear infinite;
+}
+.loading p{
+    margin-top: 6px;
+    color: #e6e6e6;
+    font-size: 3.5vw;
+}
+@keyframes rotateAni
+{
+from {transform:rotate(0deg)}
+to {transform:rotate(360deg)}
+}
+
+@-moz-keyframes rotateAni /* Firefox */
+{
+    from {transform:rotate(0deg)}
+    to {transform:rotate(360deg)}
+}
+
+@-webkit-keyframes rotateAni /* Safari 和 Chrome */
+{
+    from {transform:rotate(0deg)}
+    to {transform:rotate(360deg)}
+}
+
+@-o-keyframes rotateAni /* Opera */
+{
+    from {transform:rotate(0deg)}
+    to {transform:rotate(360deg)}
+}
+.detail_item{
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 3vw;
+}
+.detail_item h3{
+    flex: 21vw 0 0;
+    padding: 0;
+}
+.detail_item p{
+    font-size: 4vw;
+}
+.radioContent{
+	margin-bottom: 2vw;
+	overflow: hidden;
+
+	}
+.radioContentInner{
+	line-height: 7vw;
+}
+.radioContent h3{
+	float: left; 
+	overflow: hidden;
+
+}
+.radioContentInner p{
+position:relative;
+float: left;
+margin-right: 2vw;
+    align-items: center;
+    font-size: 3.7333vw;}
+.radioContentInner p input{
+    margin-top: 1.5vw;
+    display:block;
+    width: 3.5vw;
+    height: 3.5vw;
+    margin: 0;
+    margin-right: 2px;
+    outline: none;
+    background-color: #fff;
+    border: 1px solid;
+    float:left;
+    padding:0;
+    position: absolute;
+    top: 1.5vw;
+}
+.radioContentInner p label{
+padding-left: 5vw;
+}
+
+.line{
+	display:block;
+    width: 2px;
+    height: 6vw;
+    background: #fff;
+    position: absolute;
+    top:50%;
+    margin-top:-3vw
+}
+.line-left{
+	left:0
+}
+.line-right{
+	right:0
+}
+
+
+ 

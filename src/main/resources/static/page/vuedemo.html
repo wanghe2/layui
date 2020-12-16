@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>vue单页面demo</title>
+    <script type="text/javascript" src="../js/html2canvas.js" ></script>
+</head>
+<body>
+    <div id="demo">
+        <input v-model="name"  >
+        {{name}}
+        <div v-on:click="timeOut">点击</div>
+        <div ref="poster">
+            <div class="top">
+                <img :src="iconUrl" height="400" width="400"  alt crossorigin="anonymous" />
+            </div>
+            <div class="center">好样的</div>
+            <div class="bottom">
+                <img :src="miniAppUrl"  alt crossorigin="anonymous" />
+            </div>
+
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="../js/vue/axios.min.js"></script>
+<script type="text/javascript" src="../js/vue.js"></script>
+<script type="text/javascript" src="../js/vue/vuedemo.js"></script>
+<script type="text/javascript">
+	
+</script>
+</html>

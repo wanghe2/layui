@@ -1,0 +1,177 @@
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <title>申请跟进</title>
+</head>
+
+<body>
+    <div id="vueApp" class="container">
+         <!-- 需求填写 -->
+        <div class="content">
+            <div class="form_content">
+                <div class="form_item">
+                	<div class="radioContent">
+                        <h3> <span style="color: red;">*</span> 跟进结果：</h3>
+                        <div class="radioContentInner">
+                        <p><input type="radio" id="one" v-model="followStatus" value="1"> <label for='one'>成功挽退</label></p>
+    					<p><input type="radio" id="two" v-model="followStatus" value="2"><label for='two'>确认退班</label>
+    					</p>
+                        </div>
+                        
+                    </div>
+                    <div v-if="followStatus==2">
+                        <h3> <span style="color: red;">*</span> 跟进说明：</h3>
+                        <textarea type="text" maxlength="250" v-model.trim="explain"  placeholder="请填写跟进说明,最多250字"></textarea>
+                    </div>
+                    <div v-if="followStatus==2">
+                        <h3 style="flex: 14vw 0 0;"> <span style="color: red;">*</span> 图片：<span style="color: #9e9e9e;font-size: 12px;">请上传挽退相关截图</span></h3>
+                        <div class="imgContent" v-for="(item,index) in imagelist" :key="index">
+                             <div class="deleteBtn" @click="delImg(index)">X</div>
+                            <img class="imgStyle" @click="previewImg(item)" :src="item" alt="">
+                        </div>
+                        <div class="uploadFile" @click="uploadFile" v-if="imagelist.length < 3">+</div>
+                        <input id="inputFile" v-show="false" type="file" multiple="multiple" @change='fileChange'>
+                    </div>
+
+
+                </div>
+
+                <div class="btnContent">
+                    <button @click="onSubmit">提交</button>
+                </div>
+            </div>
+        </div>
+        <!-- 需求填写 end-->
+
+        <!-- 加载 -->
+        <div class="loading" v-if="isLoading">
+            <div>
+                <img src="<%=basePath%>/static/offClassMonitorStatic/images/loading.png" alt="">
+                <p>提交中...</p>
+            </div>
+
+        </div>
+        <!-- 加载 -->
+        <div class="shadow" v-if="imageUrl" @click="previewImg('')">
+            <img :src="imageUrl" alt="">
+        </div>
+    </div>
+</body>
+<script src="<%=basePath%>/static/offClassMonitorStatic/js/axios.min.js"></script>
+<script>
+    var instance = axios.create({
+        baseURL: '/wechat/binding/',
+        timeout: 6000,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Accept: '*/*'
+        },
+    });
+    window.onload = function () {
+    	var vm = new Vue({
+            el: '#vueApp',
+            data: {
+            	followStatus:'',
+            	explain: '',
+                file: [],
+                isLoading: false,
+                imagelist: [],
+                imageUrl:''
+            },
+            watch: {
+
+            },
+            created: function () {
+            },
+            mounted() {
+                this.$nextTick(() => {
+                })
+            },
+            methods: {
+                previewImg(url){
+                    this.imageUrl = url
+                },
+                uploadFile() {
+                    document.querySelector('#inputFile').click()
+                },
+                fileChange(e) {
+                    let file = e.target.files;
+                    for(let val of file){
+                        this.imagelist.push(URL.createObjectURL(val));
+                        this.file.push(val);
+                    }
+                    this.imagelist = this.imagelist.slice(0,3)
+                    this.file = this.file.slice(0,3)
+                    // this.imageUrl = URL.createObjectURL(this.file[0]);
+                    console.log(e.target.files, this.imagelist)
+                },
+                delImg(index){
+                    if(confirm('确认删除这张图片?')){
+                        vm.imagelist.splice(index,1)
+                        vm.file.splice(index,1)
+                    }
+                },
+                onSubmit() {
+                	console.log(this.followStatus)
+                	if (!this.followStatus) {
+                        alert('请选择跟进结果!');
+                        return false
+                    }
+                    if (this.followStatus==2&&!this.explain) {
+                        alert('请输入跟进说明!');
+                        return false
+                    }
+                    if (this.followStatus==2&&this.imagelist.length <= 0) {
+                        alert('请上传确认退班相关截图!');
+                        return false
+                    }
+                    this.isLoading = true;
+                    const formData = new FormData();
+                    let id = window.location.search.split('=')[1]
+                    formData.append("id", id);
+                    formData.append("message", this.explain);
+                    
+                    for(let index in this.file){
+                        console.log(this.file[index])
+                        formData.append('file'+[index], this.file[index]);
+                    }
+                    formData.append("followStatus", this.followStatus);
+                    
+                    instance.post('offclass/updateFollow.html',
+                        formData
+                    ).then(function (response) {
+                        vm.isLoading = false;
+                        if (!response.data.status) {
+                            alert(response.data.message);
+                        } else {
+                            location.replace("index.html")
+                            alert('提交成功')
+                        }
+                    })
+                        .catch(function (error) {
+                            vm.isLoading = false;
+                            alert(error)
+                        });
+
+
+                },
+                beforeUpload(file) {
+                    const isJPG = file.type === 'image/jpeg' || file.type === 'image/png';
+                    const isLt2M = file.size / 1024 / 1024 < 6;
+                    if (!isJPG) {
+                        this.$message.error('上传头像图片只能是 JPG,png 格式!');
+                    }
+                    if (!isLt2M) {
+                        this.$message.error('上传头像图片大小不能超过 6MB!');
+                    }
+                    return isJPG && isLt2M;
+                },
+            }
+        });
+    }
+</script>
+
+</html>

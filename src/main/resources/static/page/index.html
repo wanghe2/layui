@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=0">
+    <link rel="stylesheet" type="text/css" href="../css/main.css">
+    <script src="../js/vue.js"></script>
+    <script src='../js/polyfill.min.js'></script>
+     <script src='../js/jquery/jquery-1.11.1.js'></script>
+    <script src='../js/url-search-params-polyfill/index.js'></script>
+    <title>申请跟进</title>
+</head>
+
+<body>
+    <div id="vueApp" class="container">
+		<!-- 我的表单 -->
+		<div class="content mine">
+			<div class="tabContent">
+				<div class="tab">
+					<div :class="['tab_item',{tab_item_active:handleState==0}]"
+						@click='toggleTab(0)'>未处理</div>
+					<div :class="['tab_item',{tab_item_active:handleState==1}]"
+						@click='toggleTab(1)'>已处理
+						<span class="line line-left" v-show="handleState==2"></span>
+						<span class="line line-right" v-show="handleState==0"></span>
+						</div>
+						<div :class="['tab_item',{tab_item_active:handleState==2}]"
+						@click='toggleTab(2)'>48小时未处理</div>
+				</div>
+			</div>
+			
+			<div class="list_content">
+				<div class="noData" v-if="list.length==0">暂无数据</div>
+				<template v-for="(item,index) in list">
+				<div class="list_item" :key="index">
+					<p>学生姓名：{{item.studentName}}</p>
+					<p>申请时间：{{item.applyTime|formatTime}}</p>
+					<p>班号：{{item.classCode}}</p>
+					<!-- <p>申请单号：{{item.billCode}}</p>  -->
+					<p>退班状态：{{item.billState==1?'未处理':item.billState==2?'退班完成':'退班已取消'}}</p>
+					<p>教师跟进：{{item.followStatus==0?'未处理':item.followStatus==1?'挽退成功':item.followStatus==2?'确认退班':'48小时未操作'}}
+					</p>
+					<div class="btn" @click="toJump(item.id)" v-show="(handleState==0 || handleState==2)&& item.billState==1">去处理</div>
+					<div class="btn" @click="toJump(item.id)" v-show="handleState==1">查看详情</div>
+				</div>
+				</template>
+			</div>
+		</div>
+		<!-- 我的表单 end -->
+		<p v-if="!isHavaLoadData && list.length>=pageSize" class="noMore">没有更多数据了</p>
+		<!-- 加载 -->
+		<div class="loading" v-show="isLoading">
+			<div>
+				<img src="../images/loading.png" alt="">
+				<p>加载中...</p>
+			</div>
+
+		</div>
+		<!-- 加载 -->
+	</div>
+</body>
+<script src="../js/axios.min.js"></script>
+<script>
+    var instance = axios.create({
+        baseURL: 'http://10.167.3.125:9911/datasourcekfa/offclass/monitor/',
+        // baseURL: 'http://sw.hf.xdf.cn/free/',
+        timeout: 6000,
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Accept: '*/*'
+        },
+    });
+    window.onload = function () {
+        var vm = new Vue({
+            el: '#vueApp',
+            data: {
+                handleState: 0,//handleState这个字段是 处理状态， 0 未处理， 1已处理
+                pageNum: 1,
+                pageSize: 10,
+                list: [],
+               
+                isHavaLoadData: true,
+                isLoading: false
+            },
+            filters: {
+                formatTime: function (value) {
+                    let time = new Date(value);
+                    return `${time.getFullYear()}-${time.getMonth() + 1}-${time.getDate()}  ${time.getHours()}:${time.getMinutes()}`
+                }
+            },
+
+            watch: {
+
+            },
+            created: function () {
+
+            },
+            mounted() {
+                this.$nextTick(() => {
+                    this.getList();
+                    window.addEventListener('scroll', this.pullUp)
+                })
+            },
+            beforeDestroy() {
+                window.removeEventListener('scroll', this.pullUp)
+            },
+            methods: {
+                // 滚动条丽顶部的距离
+                getScrollTop() {
+                    return document.documentElement.scrollTop || document.body.scrollTop
+                },
+                // 窗口可视区域高度
+                getClientHeight() {
+                    return document.documentElement.clientHeight || document.body.clientHeight
+                },
+                // 滚动区域高度
+                getScrollHeight() {
+                    return document.documentElement.scrollHeight || document.body.scrollHeight
+                },
+                pullUp() {
+                    let _this = this
+                    let scrollTop = this.getScrollTop()
+                    let clientHeight = this.getClientHeight()
+                    let scrollHeight = this.getScrollHeight()
+                    // 滚动条 + 可视区域高度 >= 滚动条高度 ==>  滚动条触底
+                    if (scrollTop + clientHeight >= scrollHeight) {
+                        if (this.isHavaLoadData) {
+                            this.pageNum += 1;
+                            this.getList();
+                        } 
+                    }
+                },
+                getList() {
+                    this.isLoading = true;
+                    let param = `pageNum=${this.pageNum}&pageSize=${this.pageSize}&handleState=${this.handleState}`
+                    
+                  /* 
+                  	jsonp的用法（解决跨域问题）
+                  $.ajax({
+                    	url : 'http://10.167.3.125:9911/datasourcekfa/offclass/monitor/page',
+                    	type : 'GET',
+                    	data : 'pageNum=1&pageSize=1&handleState=-1',
+                    	dataType : 'jsonp',
+                    	jsonp: "callback",
+                    	jsonpCallback:'callback',
+                    	success: function(data){
+                    		 console.log(data);
+                        },
+                        error: function(err){
+                            alert('fail');
+                        }
+                    }); */
+                    
+                    
+                    
+                    
+                 
+                    instance.get('page?' + param).then(function (response) {
+                        setTimeout(() => {
+                            vm.isLoading = false;
+                        }, 200)
+                        if (!response.data.status) {
+                            alert(response.data.message);
+                        } else {
+                            let resData = JSON.parse(response.data.data)
+                            console.log(resData)
+                            if (resData.list.length < vm.pageSize) {
+                                vm.list = vm.list.concat(resData.list)
+                                vm.isHavaLoadData = false;
+                                // alert('没有更多数据了')
+                            } else {
+                                vm.list = vm.list.concat(resData.list)
+                            }
+
+                        }
+                    })
+                        .catch(function (error) {
+                            setTimeout(() => {
+                                vm.isLoading = false;
+                            }, 200)
+                            alert(error);
+                        }); 
+
+
+                },
+                toggleTab(val) {
+                    if (val != this.handleState) {
+                        this.handleState = val;
+                        this.pageNum = 1;
+                        this.list = [];
+                        this.isHavaLoadData = true
+                        this.getList();
+                    }
+
+                },
+                toJump(id) {
+                    if (this.handleState == 0) {
+                        window.location = `form.html?id=${id}`
+                    } else if (this.handleState == 1) {
+                        window.location = `detail.html?id=${id}`
+                    }
+                },
+
+
+
+            }
+        });
+    }
+    
+     function callback(data){
+    	var i = 0;
+    	i++;
+    } 
+</script>
+
+</html>
